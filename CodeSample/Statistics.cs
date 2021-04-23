@@ -16,9 +16,20 @@ namespace CodeSample
 
 		public List<string> ErrorDescriptions;
 
-		public override string ToHtml()
+		public string ToHtml()
 		{
-
+			string retVal = "";
+			//normally would be fanciness here to set it up to look pretty when we get
+			//the statistics/error reports/
+			//but for now I'm just throwing it to a string. 
+			StringBuilder myBuilder = new StringBuilder();
+			foreach (string errorMessage in ErrorDescriptions)
+			{
+				myBuilder.Append(errorMessage);
+			}
+			retVal = myBuilder.ToString();
+			retVal = $"Number Processed: {Processed.ToString()} " + retVal;
+			return retVal;
 		}
 
 		public string Title { get; set; }

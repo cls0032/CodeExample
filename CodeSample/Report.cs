@@ -10,7 +10,7 @@ namespace CodeSample
     /// <summary>
 	/// Report class for the Report Template that we will use
 	/// </summary>
-    public class Report //: GenericAutoProcessorProcess
+    public class Report 
     {
         public string application { get; set; }
         public string reportName { get; set; }
