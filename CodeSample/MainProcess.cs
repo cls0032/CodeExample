@@ -6,9 +6,7 @@ using System.Collections;
 using System.Data.SqlClient;
 using System.Net.Mail;
 using DataDynamics.ActiveReports;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeSample
 {
@@ -114,9 +112,8 @@ namespace CodeSample
             }
         }
         /// <summary>
-		/// After we have created the report, sends the emails with them attached.
+		/// Gets population to  process and sends them off to be emailed.
 		/// </summary>
-		/// <returns>true if sent, false otherwise</returns>
         private void ProcessPopulation()
         {
             try
@@ -162,7 +159,7 @@ namespace CodeSample
             return networkStorageLocation;
         }
         /// <summary>
-        /// For Feature Flags, gets the paramater value
+        /// Gets the parameter value
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns>
@@ -214,7 +211,8 @@ namespace CodeSample
             return retVal;
         }
         /// <summary>
-		/// Gets together the information about the individual, creates the file attachement for them, and then sends email
+		/// Gets together the information about the individual, creates the file attachement for them
+        /// and then sends email
 		/// </summary>
 		/// <param name="row"></param>
 		/// <param name="reportID"></param>
@@ -254,7 +252,7 @@ namespace CodeSample
             }
         }
         /// <summary>
-		/// creates the report attachment?
+		/// creates the report attachment
 		/// </summary>
 		/// <param name="populationID"></param>
 		/// <param name="reportID"></param>
@@ -412,7 +410,14 @@ namespace CodeSample
             }
             return retVal;
         }
-
+        /// <summary>
+        /// This sends an email via SMTP
+        /// </summary>
+        /// <param name="fromAddress"></param>
+        /// <param name="toAddress"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
+        /// <param name="reportFile"></param>
         private void SendEmail(string fromAddress, string toAddress, string subject, string body, Attachment reportFile)
 		{
             try
