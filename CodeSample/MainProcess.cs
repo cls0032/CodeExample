@@ -149,6 +149,10 @@ namespace CodeSample
                 stats.AddError($"An error occurred while trying to send Emails.  ERROR=[{ex.Message}]");
             }
         }
+        /// <summary>
+        /// Uses parameters to get the file share location.
+        /// </summary>
+        /// <returns></returns>
         private string GetEmailAttachmentPath()
         {
             string networkStorageLocation = GetParameterValueByName("Email Template Attachment Location");
