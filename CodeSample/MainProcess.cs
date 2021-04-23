@@ -68,14 +68,11 @@ namespace CodeSample
         /// </summary>
         public void Execute()
         {
-            //TODO: create a Statistics class
             Statistics stats = new Statistics();
             stats.BeginDate = DateTime.Now;
             stats.Title = Constants.PROCESS_NAME;
-            //TODO: Do I need to create a Log class as well?
             Log.Info(String.Format("{0} Started : {1:D}", Constants.PROCESS_NAME, stats.BeginDate));
 
-            //TODO:  open connection
             // If we should run aka we can open a DB connection
             if (OpenConnection())
             {
@@ -109,8 +106,7 @@ namespace CodeSample
             Log.Info(stats.ToString());
             try
             {
-                //TODO: finish figuring out what all needs to be thrown into notification email
-                SendEmail(Constants.EMAIL_NOTIFICATION_FROMADDRESS, Constants.EMAIL_NOTIFICATION_TOADDRESS,Constants.EMAIL_NOTIFICATION_SUBJECT, stats.ToHtml());
+                SendEmail(Constants.EMAIL_NOTIFICATION_FROMADDRESS, Constants.EMAIL_NOTIFICATION_TOADDRESS,Constants.EMAIL_NOTIFICATION_SUBJECT, stats.ToHtml(), null);
             }
             catch (Exception e)
             {
@@ -121,8 +117,7 @@ namespace CodeSample
 		/// After we have created the report, sends the emails with them attached.
 		/// </summary>
 		/// <returns>true if sent, false otherwise</returns>
-		// does this really need to return something?
-        private bool ProcessPopulation()
+        private void ProcessPopulation()
         {
             try
             {
@@ -140,7 +135,7 @@ namespace CodeSample
                 DataTable dt = new DataTable();
                 dt = mySqlHelper.GetDataTable(Constants.SP_GET_FINALIZEDPOPULATION, null);
 
-                if (dt == null || dt.Rows == null && dt.Rows.Count <= 0) return false;
+                if (dt == null || dt.Rows == null && dt.Rows.Count <= 0) return;
 
                 string reportName = "My Report";
                 Guid? reportID = GetReportIDByName(reportName);
@@ -156,7 +151,6 @@ namespace CodeSample
             {
                 stats.AddError($"An error occurred while trying to send Emails.  ERROR=[{ex.Message}]");
             }
-            return true;
         }
         private string GetEmailAttachmentPath()
         {
@@ -209,7 +203,6 @@ namespace CodeSample
             SqlHelper mySqlHelper = new SqlHelper(Constants.CONN_STRING);
             try
             {
-                //TODO: Create an execute sproc helper similar to how I did the GetDataTable
                 mySqlHelper.ExecuteSproc(Constants.SP_GET_REPORTID_BYNAME, inParms, ref outParms);
                 retVal = new Guid(outParms["@ID"].ToString());
             }
@@ -221,12 +214,11 @@ namespace CodeSample
             return retVal;
         }
         /// <summary>
-		/// 
+		/// Gets together the information about the individual, creates the file attachement for them, and then sends email
 		/// </summary>
 		/// <param name="row"></param>
 		/// <param name="reportID"></param>
 		/// <param name="subfolderName"></param>
-		// TODO: create a new method that will take addresses etc and send email via SMTP
         private void SendPopulationEmail(DataRow row, Guid reportID, string subfolderName)
         {
             Guid populationID = Guid.Empty;
@@ -299,11 +291,10 @@ namespace CodeSample
                     fs.Write(buffer, 0, length);
                     dataToRead -= length;
                 }
-                Attachment emailAttachment = new Attachment(fs, "name");
-                fs.Flush();
+                Attachment emailAttachment = new Attachment(fs, "My Report File");
+                retVal = emailAttachment;
                 fs.Close();
                 fs = null;
-                retVal = emailAttachment;
             }
             catch (Exception ex)
             {
@@ -432,7 +423,11 @@ namespace CodeSample
                 message.Subject = subject;
                 message.Body = body;
                 message.IsBodyHtml = true;
-                message.Attachments.Add(reportFile);
+                if (reportFile != null)
+				{
+                    message.Attachments.Add(reportFile);
+				}
+                
 
                 StringBuilder sbLog = new StringBuilder();
                 sbLog.Append("SENDING EMAIL LOG {\n");

@@ -29,16 +29,17 @@ namespace CodeSample
         public DataTable GetDataTable(string sprocName, Hashtable parms)
         {
             DataTable retVal = new DataTable();
+            SqlDataAdapter adapter = new SqlDataAdapter();
             // Open connection
-            conn = new SqlConnection(!String.IsNullOrEmpty(connString) ? connString : this.ConnectionString);
+            SqlConnection conn = new SqlConnection(!String.IsNullOrEmpty(ConnectionString) ? ConnectionString : this.ConnectionString);
             conn.Open();
 
             // Create command
-            cmd = new SqlCommand
+            SqlCommand cmd = new SqlCommand
             {
                 CommandText = sprocName,
                 Connection = conn,
-                CommandTimeout = connTimeout.HasValue ? connTimeout.Value : this.ConnectionTimeout,
+                CommandTimeout = ConnectionTimeout,
                 CommandType = CommandType.StoredProcedure
             };
 
@@ -65,7 +66,7 @@ namespace CodeSample
             }
             catch (Exception e)
             {
-                resultMessage = String.Format("Error processing sproc: {0}, error: {1}, {2}", sprocName, e.Message, e.StackTrace);
+                throw new Exception(String.Format("Error executing stored procedure {0}", sprocName), e);
             }
             finally
             {
@@ -73,7 +74,6 @@ namespace CodeSample
                 if (adapter != null) adapter.Dispose();
                 if (conn.State != ConnectionState.Closed) conn.Close();
             }
-            if (resultMessage != "") Log.Info(resultMessage);
 
             return retVal;
         }
@@ -106,7 +106,7 @@ namespace CodeSample
 
 
             // Open connection
-            conn = new SqlConnection(!String.IsNullOrEmpty(connString) ? connString : this.ConnectionString);
+            conn = new SqlConnection(ConnectionString);
             conn.Open();
 
 
@@ -115,7 +115,7 @@ namespace CodeSample
             {
                 CommandText = sprocName,
                 Connection = conn,
-                CommandTimeout = connTimeout.HasValue ? connTimeout.Value : this.ConnectionTimeout,
+                CommandTimeout = ConnectionTimeout,
                 CommandType = CommandType.StoredProcedure
             };
 

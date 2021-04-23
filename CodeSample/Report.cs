@@ -27,15 +27,14 @@ namespace CodeSample
         {
             if (dr != null)
             {
-                application = dr["Name"].ToString();
-                reportName = dr["ReportName"].ToString();
-                desc = dr["Description"].ToString();
-                fileName = dr["FileName"].ToString();
-                storedProc = dr["StoredProc"].ToString();
-                active = (dr["Active"] == DBNull.Value) ? false : Convert.ToBoolean(dr["Active"]);
+                application = (dr["Name"] == DBNull.Value) ? "Student Name" : dr["Name"].ToString();
+                reportName = (dr["ReportName"] == DBNull.Value) ? "Generic Report" : dr["ReportName"].ToString();
+                desc = (dr["Description"] == DBNull.Value) ? "Generic Description" : dr["Description"].ToString();
+                fileName = (dr["FileName"] == DBNull.Value) ? "Generic FileName" : dr["FileName"].ToString();
+                storedProc = (dr["StoredProc"] == DBNull.Value) ? "p_Generice_DoSomething" : dr["StoredProc"].ToString();
                 archived = (dr["Archived"] == DBNull.Value) ? true : Convert.ToBoolean(dr["Archived"]);
-                reportData = dr["ReportData"].ToString();
-                reportScript = dr["ReportScript"].ToString();
+                reportData = (dr["ReportData"] == DBNull.Value) ? "Generic Data" : dr["ReportData"].ToString();
+                reportScript = (dr["ReportScript"] == DBNull.Value) ? "Generic Script" : dr["ReportScript"].ToString();
 
             }
         }

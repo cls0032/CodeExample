@@ -16,6 +16,11 @@ namespace CodeSample
 
 		public List<string> ErrorDescriptions;
 
+		public override string ToHtml()
+		{
+
+		}
+
 		public string Title { get; set; }
 		public bool NothingToDo { get; set; }
 		public int Errors { get; set; }
@@ -23,7 +28,10 @@ namespace CodeSample
 		public DateTime EndDate { get; set; }
 		public string RunTime { get; }
 
-		public void AddError(string message);
+		public void AddError(string message)
+		{
+			ErrorDescriptions.Add(message);
+		}
 
 
 
